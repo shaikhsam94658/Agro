@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroCenter · farm & field</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #f4f7f0;
+            color: #1e3b2a;
+            line-height: 1.5;
+        }
+
+        :root {
+            --green-deep: #1f4d2e;
+            --green-lime: #558b3c;
+            --soil: #a8682c;
+            --cream: #faebd7;
+            --sand: #f2e1c0;
+            --light-bg: #f9fbf5;
+        }
+
+        /* ----- layout ----- */
+        .top-bar {
+            background-color: #123d1f;
+            color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        .contact-info span { margin-right: 2rem; }
+        .contact-info i { color: #fad98b; margin-right: 0.3rem; }
+        .user-links a {
+            color: white; text-decoration: none; margin-left: 1.5rem;
+            font-weight: 500; transition: 0.2s;
+        }
+        .user-links a:hover { color: #f7d975; }
+
+        .main-header {
+            background: white;
+            padding: 0.7rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 12px #d0ddc0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo-icon {
+            font-size: 2.4rem;
+            color: var(--green-lime);
+        }
+        .logo-text h2 {
+            font-size: 1.8rem;
+            color: var(--green-deep);
+            line-height: 1.2;
+        }
+        .logo-text p {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #735e3a;
+        }
+        .search-bar {
+            flex: 1 1 300px;
+            max-width: 500px;
+            margin: 0 2rem;
+            display: flex;
+            border-radius: 40px;
+            overflow: hidden;
+            border: 1.5px solid #c2d6b3;
+            background: white;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 0.7rem 1.2rem;
+            border: none;
+            outline: none;
+        }
+        .search-bar button {
+            background: var(--green-lime);
+            border: none;
+            padding: 0 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        .header-icons {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .icon-cart, .icon-user {
+            font-size: 1.6rem;
+            color: #1f4a2a;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .icon-cart:hover, .icon-user:hover { color: var(--soil); }
+        .cart-count {
+            position: absolute;
+            top: -10px; right: -12px;
+            background: var(--soil);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            padding: 3px 7px;
+            font-weight: bold;
+        }
+
+        /* ----- category / page nav ----- */
+        .category-nav {
+            background: #deecce;
+            padding: 0.8rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            font-weight: 600;
+            border-bottom: 3px solid #aec59e;
+        }
+        .category-nav a {
+            text-decoration: none;
+            color: #173e1f;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: 0.2s;
+        }
+        .category-nav a i { color: #3f722a; }
+        .category-nav a:hover { color: #b45f1b; transform: translateY(-1px); }
+
+        /* page indicator */
+        .page-header {
+            margin: 1.8rem 2rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .page-header h2 {
+            font-size: 2.2rem;
+            color: #1e532e;
+            border-left: 10px solid var(--green-lime);
+            padding-left: 1rem;
+        }
+        .back-link {
+            background: #e3edd2;
+            padding: 0.3rem 1.3rem;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #1d491d;
+            font-weight: 500;
+        }
+
+        /* product grid (used on all catalog pages) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 1rem 2rem 3rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem 1rem 1.5rem;
+            box-shadow: 0 8px 16px #ccddc0;
+            transition: 0.25s;
+            text-align: center;
+            border: 1px solid #d3e4c1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 28px #b1caa0;
+        }
+        .product-img { font-size: 4.5rem; color: #1f542f; margin-bottom: 0.5rem; }
+        .product-category {
+            background: #ebf3df; padding: 0.2rem 1rem; border-radius: 30px;
+            align-self: center; font-size: 0.8rem; color: #5b4a30;
+        }
+        .product-title { font-size: 1.4rem; font-weight: 600; color: #1b4624; }
+        .product-desc { font-size: 0.9rem; color: #4e6543; margin: 0.3rem 0; flex:1; }
+        .price-row { margin: 0.8rem 0 1rem; }
+        .current-price { font-size: 1.9rem; font-weight: 700; color: #b9530e; }
+        .old-price { font-size: 1rem; color: #8d9e84; text-decoration: line-through; margin-left: 0.6rem; }
+        .add-to-cart {
+            background: var(--green-lime); color: white; border: none; padding: 0.8rem;
+            border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+            margin-top: auto; border: 1px solid #417d30;
+        }
+        .add-to-cart:hover { background: #2b6a3b; letter-spacing: 0.3px; }
+
+        /* LOGIN MODAL (admin+user) */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #142010c9;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-modal.active { display: flex; }
+        .login-panel {
+            background: #fefef9;
+            width: min(90%, 400px);
+            padding: 2rem 2rem 1.8rem;
+            border-radius: 48px;
+            box-shadow: 0 20px 30px #1a301ac9;
+            border: 3px solid #7ca86b;
+        }
+        .login-panel h3 {
+            font-size: 2rem; color: #1c552c; margin-bottom: 0.5rem;
+            display: flex; gap: 0.6rem; align-items: center;
+        }
+        .tabs {
+            display: flex; gap: 0.5rem; margin: 1.2rem 0 1.5rem;
+        }
+        .tab-btn {
+            flex: 1; padding: 0.7rem; border-radius: 40px; border: 2px solid #cbb59b;
+            background: transparent; font-weight: 600; cursor: pointer;
+        }
+        .tab-btn.active {
+            background: var(--green-deep); color: white; border-color: var(--green-deep);
+        }
+        .login-form {
+            display: flex; flex-direction: column; gap: 1.2rem;
+        }
+        .login-form input {
+            padding: 0.9rem 1.2rem; border-radius: 50px; border: 1px solid #a1b892;
+            font-size: 1rem;
+        }
+        .login-form button {
+            background: var(--soil); color: white; padding: 1rem;
+            border: none; border-radius: 40px; font-weight: 700; font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .close-modal {
+            margin-top: 1rem; background: none; border: none;
+            color: #5b754b; text-decoration: underline; cursor: pointer;
+        }
+
+        /* cart sidebar (exactly as before) */
+        .cart-sidebar {
+            position: fixed; top: 0; right: -400px; width: 340px; height: 100%;
+            background: white; box-shadow: -6px 0 20px #264d2e50; transition: right 0.35s;
+            padding: 2rem 1.5rem; z-index: 1500; border-left: 6px solid var(--green-lime);
+            display: flex; flex-direction: column;
+        }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; font-size: 1.8rem; color: var(--green-deep); margin-bottom: 2rem; }
+        .close-cart { background: none; border: none; font-size: 2.2rem; cursor: pointer; }
+        .cart-items { flex: 1; overflow-y: auto; list-style: none; }
+        .cart-item {
+            background: #f0f8e8; padding: 0.8rem; border-radius: 24px; margin-bottom: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .cart-item-info { display: flex; flex-direction: column; }
+        .cart-item-remove { background: none; border: none; color: #b1421b; font-size: 1.3rem; cursor: pointer; }
+        .cart-total {
+            font-size: 1.8rem; font-weight: 700; border-top: 2px dashed #b3cf9f;
+            padding-top: 1rem; display: flex; justify-content: space-between;
+        }
+        .checkout-btn {
+            background: var(--soil); color: white; border: none; padding: 1rem;
+            border-radius: 40px; font-weight: 700; margin-top: 1rem; cursor: pointer;
+        }
+        .overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #142010b0; display: none; z-index: 1200;
+        }
+        .overlay.active { display: block; }
+
+        /* order section (admin order viewer) */
+        .orders-panel {
+            background: #f1faea; margin: 2rem; padding: 1.5rem 2rem;
+            border-radius: 48px; border: 2px solid #b5d4a2;
+        }
+        .orders-panel h3 { font-size: 2rem; color: #154d23; }
+        .order-list {
+            margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;
+        }
+        .order-card {
+            background: white; border-radius: 40px; padding: 1rem 2rem;
+            display: flex; flex-wrap: wrap; justify-content: space-between;
+            border: 1px solid #abc999;
+        }
+
+        footer {
+            background: #173320; color: #e2dfc7; padding: 2rem; text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- top bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> +1 (800) 247-6482</span>
+        <span><i class="fas fa-envelope"></i> grow@agrocenter.com</span>
+    </div>
+    <div class="user-links" id="userLinks">
+        <a href="#" id="loginTrigger"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="#" id="registerTrigger"><i class="fas fa-user-plus"></i> Register</a>
+    </div>
+</div>
+
+<!-- main header with cart icon -->
+<div class="main-header">
+    <div class="logo-area">
+        <i class="fas fa-leaf logo-icon"></i>
+        <div class="logo-text">
+            <h2>AgroCenter</h2>
+            <p>GROW WITH CONFIDENCE</p>
+        </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="Search seeds, tools...">
+        <button><i class="fas fa-search"></i></button>
+    </div>
+    <div class="header-icons">
+        <div class="icon-user" id="userIcon"><i class="fas fa-user-circle"></i></div>
+        <div class="icon-cart" id="cartIcon">
+            <i class="fas fa-shopping-basket"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </div>
+</div>
+
+<!-- category / page navigation (now with links to separate pages) -->
+<div class="category-nav">
+    <a href="#" class="page-link" data-page="all"><i class="fas fa-store"></i> All products</a>
+    <a href="#" class="page-link" data-page="seeds"><i class="fas fa-seedling"></i> Seeds</a>
+    <a href="#" class="page-link" data-page="machinery"><i class="fas fa-tractor"></i> Machinery</a>
+    <a href="#" class="page-link" data-page="fertilizers"><i class="fas fa-flask"></i> Fertilizers</a>
+    <a href="#" class="page-link" data-page="tools"><i class="fas fa-cut"></i> Tools</a>
+</div>
+
+<!-- page title & back button (dynamic) -->
+<div class="page-header" id="pageHeader">
+    <h2 id="currentPageTitle">All products</h2>
+    <a href="#" id="backToAllLink" class="back-link" style="display: none;"><i class="fas fa-arrow-left"></i> back to catalog</a>
+</div>
+
+<!-- PRODUCT GRID (all products loaded here) -->
+<div class="product-grid" id="productGrid"></div>
+
+<!-- hidden admin orders panel (visible only after admin login) -->
+<div id="adminOrdersPanel" style="display: none;" class="orders-panel">
+    <h3><i class="fas fa-clipboard-list"></i> recent orders (admin view)</h3>
+    <div class="order-list" id="orderList"></div>
+</div>
+
+<!-- cart sidebar -->
+<div class="overlay" id="overlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <span><i class="fas fa-shopping-basket"></i> cart</span>
+        <button class="close-cart" id="closeCartBtn">&times;</button>
+    </div>
+    <ul class="cart-items" id="cartItemsList"></ul>
+    <div class="cart-total"><span>Total:</span> <span id="cartTotalAmount">$0.00</span></div>
+    <button class="checkout-btn" id="checkoutBtn"><i class="fas fa-credit-card"></i> place order</button>
+</div>
+
+<!-- LOGIN MODAL (admin + user) -->
+<div class="login-modal" id="loginModal">
+    <div class="login-panel">
+        <h3><i class="fas fa-leaf"></i> AgroCenter login</h3>
+        <div class="tabs">
+            <button class="tab-btn active" id="tabUser">User</button>
+            <button class="tab-btn" id="tabAdmin">Admin</button>
+        </div>
+        <div class="login-form" id="loginForm">
+            <input type="text" placeholder="username" id="loginUsername" value="user1">
+            <input type="password" placeholder="password" id="loginPassword" value="pass">
+            <button id="loginSubmitBtn"><i class="fas fa-sign-in-alt"></i> sign in</button>
+        </div>
+        <button class="close-modal" id="closeModalBtn">close</button>
+    </div>
+</div>
+
+<!-- footer -->
+<footer>
+    <p>🌱 AgroCenter – since 1987 | <a href="#" style="color:#f3d37c;">privacy</a> | <a href="#" style="color:#f3d37c;">farmers market</a></p>
+</footer>
+
+<script>
+    (function() {
+        // ---------- PRODUCT DATABASE (full catalog) ----------
+        const allProducts = [
+            { id: 101, name: 'Heirloom tomato seeds', category: 'Seeds', desc: 'Organic non-GMO, 200+ seeds', price: 6.99, oldPrice: 9.99, icon: 'fa-seedling' },
+            { id: 102, name: 'Sweet corn seeds', category: 'Seeds', desc: 'Honey select, 150 seeds', price: 5.49, oldPrice: 7.80, icon: 'fa-seedling' },
+            { id: 103, name: 'Organic pumpkin seeds', category: 'Seeds', desc: 'For pies & carving', price: 4.99, oldPrice: 6.50, icon: 'fa-seedling' },
+            { id: 201, name: 'Mini power tiller', category: 'Machinery', desc: '2.5HP, 4-stroke', price: 289.0, oldPrice: 349.0, icon: 'fa-tractor' },
+            { id: 202, name: 'Seed drill planter', category: 'Machinery', desc: 'Precision 3-row', price: 459.0, oldPrice: 529.0, icon: 'fa-tractor' },
+            { id: 203, name: 'Brush cutter', category: 'Machinery', desc: 'lightweight 43cc', price: 179.0, oldPrice: 219.0, icon: 'fa-tractor' },
+            { id: 301, name: 'Nitrogen booster 20-10-10', category: 'Fertilizers', desc: '5lb bag slow release', price: 18.25, oldPrice: 24.0, icon: 'fa-flask' },
+            { id: 302, name: 'Organic compost blend', category: 'Fertilizers', desc: '10lb, OMRI listed', price: 14.90, oldPrice: 19.90, icon: 'fa-flask' },
+            { id: 303, name: 'Liquid seaweed extract', category: 'Fertilizers', desc: '32oz concentrate', price: 22.40, oldPrice: 28.0, icon: 'fa-flask' },
+            { id: 401, name: 'Pruning shear set', category: 'Tools', desc: 'titanium coated 3pcs', price: 34.30, oldPrice: 44.99, icon: 'fa-cut' },
+            { id: 402, name: 'Stainless hoe', category: 'Tools', desc: 'wooden handle', price: 29.99, oldPrice: 39.99, icon: 'fa-cut' },
+        ];
+
+        // current displayed products (initially all)
+        let currentProducts = [...allProducts];
+
+        // ---------- cart ----------
+        let cart = [];
+
+        // ---------- auth state ----------
+        let loggedInUser = null;          // 'user' or 'admin'
+        let orders = [];                  // each order: { id, items, total, date }
+
+        // DOM elements
+        const grid = document.getElementById('productGrid');
+        const pageTitle = document.getElementById('currentPageTitle');
+        const backLink = document.getElementById('backToAllLink');
+        const adminPanel = document.getElementById('adminOrdersPanel');
+        const orderListDiv = document.getElementById('orderList');
+        const cartCountSpan = document.getElementById('cartCount');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartTotalSpan = document.getElementById('cartTotalAmount');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const overlay = document.getElementById('overlay');
+        const cartIcon = document.getElementById('cartIcon');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const loginModal = document.getElementById('loginModal');
+        const loginTrigger = document.getElementById('loginTrigger');
+        const registerTrigger = document.getElementById('registerTrigger');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const tabUser = document.getElementById('tabUser');
+        const tabAdmin = document.getElementById('tabAdmin');
+        const loginSubmit = document.getElementById('loginSubmitBtn');
+        const loginUsername = document.getElementById('loginUsername');
+        const loginPassword = document.getElementById('loginPassword');
+        const userIcon = document.getElementById('userIcon');
+
+        // ---------- helper: render product grid ----------
+        function renderProducts(productsArray) {
+            grid.innerHTML = '';
+            if (productsArray.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem;">🌿 no products match</div>';
+                return;
+            }
+            productsArray.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img"><i class="fas ${p.icon}"></i></div>
+                    <span class="product-category">${p.category}</span>
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-desc">${p.desc}</div>
+                    <div class="price-row">
+                        <span class="current-price">$${p.price.toFixed(2)}</span>
+                        <span class="old-price">$${p.oldPrice.toFixed(2)}</span>
+                    </div>
+                    <button class="add-to-cart" data-id="${p.id}"><i class="fas fa-cart-plus"></i> Add to cart</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // filter by category
+        function filterCategory(cat) {
+            if (cat === 'all') {
+                currentProducts = [...allProducts];
+                pageTitle.innerText = 'All products';
+                backLink.style.display = 'none';
+            } else {
+                const filtered = allProducts.filter(p => p.category.toLowerCase() === cat.toLowerCase());
+                currentProducts = filtered;
+                pageTitle.innerText = cat;
+                backLink.style.display = 'inline-block';
+            }
+            renderProducts(currentProducts);
+        }
+
+        // ---------- cart functions ----------
+        function updateCartUI() {
+            const totalItems = cart.reduce((acc, i) => acc + i.quantity, 0);
+            cartCountSpan.innerText = totalItems;
+            cartItemsList.innerHTML = '';
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = '<li style="text-align:center;">cart empty</li>';
+            } else {
+                cart.forEach((item, idx) => {
+                    const li = document.createElement('li');
+                    li.className = 'cart-item';
+                    li.innerHTML = `
+                        <div class="cart-item-info">
+                            <span>${item.name}</span>
+                            <small>$${item.price.toFixed(2)} x ${item.quantity}</small>
+                        </div>
+                        <button class="cart-item-remove" data-cartindex="${idx}"><i class="fas fa-trash-alt"></i></button>
+                    `;
+                    cartItemsList.appendChild(li);
+                });
+            }
+            const total = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+            cartTotalSpan.innerText = `$${total.toFixed(2)}`;
+
+            document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.currentTarget.getAttribute('data-cartindex');
+                    if (index !== null) {
+                        cart.splice(index, 1);
+                        updateCartUI();
+                    }
+                });
+            });
+        }
+
+        function addToCart(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            const existing = cart.find(item => item.id === productId);
+            if (existing) existing.quantity += 1;
+            else cart.push({ ...product, quantity: 1 });
+            updateCartUI();
+            cartSidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        // place order (checkout)
+        function placeOrder() {
+            if (cart.length === 0) { alert('cart empty'); return; }
+            if (!loggedInUser) {
+                alert('Please login as user or admin to place order.');
+                loginModal.classList.add('active');
+                return;
+            }
+            const order = {
+                id: Date.now(),
+                items: cart.map(i => ({ name: i.name, qty: i.quantity, price: i.price })),
+                total: cart.reduce((acc,i) => acc + i.price * i.quantity, 0),
+                user: loggedInUser,
+                date: new Date().toLocaleString()
+            };
+            orders.push(order);
+            alert(`Order placed! ID: ${order.id}`);
+            cart = [];
+            updateCartUI();
+            if (loggedInUser === 'admin') renderAdminOrders();
+        }
+
+        // admin order viewer
+        function renderAdminOrders() {
+            if (orders.length === 0) {
+                orderListDiv.innerHTML = '<p>no orders yet</p>';
+                return;
+            }
+            orderListDiv.innerHTML = orders.map(o => `
+                <div class="order-card">
+                    <div><strong>#${o.id}</strong> ${o.date}</div>
+                    <div>${o.items.map(i=>`${i.qty}× ${i.name}`).join(', ')}</div>
+                    <div>$${o.total.toFixed(2)} (${o.user})</div>
+                </div>
+            `).join('');
+        }
+
+        // ---------- event listeners ----------
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.dataset.page; // 'all', 'seeds', 'machinery', 'fertilizers', 'tools'
+                filterCategory(page);
+            });
+        });
+
+        backLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            filterCategory('all');
+        });
+
+        // add to cart via delegation
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+                const btn = e.target.closest('.add-to-cart');
+                const id = parseInt(btn.getAttribute('data-id'));
+                addToCart(id);
+            }
+        });
+
+        // cart sidebar toggle
+        cartIcon.addEventListener('click', () => {
+            cartSidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        closeCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        overlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // checkout
+        checkoutBtn.addEventListener('click', placeOrder);
+
+        // login modal triggers
+        loginTrigger.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add('active'); });
+        registerTrigger.addEventListener('click', (e) => { e.preventDefault(); alert('registration demo: use any username/password'); });
+        closeModalBtn.addEventListener('click', () => loginModal.classList.remove('active'));
+        userIcon.addEventListener('click', () => loginModal.classList.add('active'));
+
+        // tab switching
+        tabUser.addEventListener('click', () => {
+            tabUser.classList.add('active');
+            tabAdmin.classList.remove('active');
+        });
+        tabAdmin.addEventListener('click', () => {
+            tabAdmin.classList.add('active');
+            tabUser.classList.remove('active');
+        });
+
+        // login submit (very simple simulation)
+        loginSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isAdmin = tabAdmin.classList.contains('active');
+            const username = loginUsername.value.trim() || 'user';
+            if (isAdmin) {
+                // simplistic admin check
+                if (username.toLowerCase().includes('admin') || loginPassword.value === 'admin123') {
+                    loggedInUser = 'admin';
+                    alert('Admin logged in');
+                } else {
+                    alert('Admin login failed (try admin/password containing admin)');
+                    return;
+                }
+            } else {
+                loggedInUser = username; // any username accepted as user
+                alert(`Welcome ${username} (user)`);
+            }
+            loginModal.classList.remove('active');
+            // if admin, show admin panel
+            if (loggedInUser === 'admin') {
+                adminPanel.style.display = 'block';
+                renderAdminOrders();
+            } else {
+                adminPanel.style.display = 'none';
+            }
+            // update UI maybe
+        });
+
+        // on load: show all products
+        filterCategory('all');
+        updateCartUI();
+
+        // for demo: show admin orders if already admin (not logged by default)
+        // also hide admin panel initially
+        adminPanel.style.display = 'none';
+    })();
+</script>
+</body>
+</html>
